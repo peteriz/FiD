@@ -109,7 +109,8 @@ def init_distributed_mode(params):
         # read environment variables
         params.global_rank = int(os.environ['RANK'])
         params.world_size = int(os.environ['WORLD_SIZE'])
-        params.n_gpu_per_node = int(os.environ['NGPU'])
+        params.n_gpu_per_node = int(params.gpus)
+        # params.n_gpu_per_node = int(os.environ['NGPU'])
 
         # number of nodes / node ID
         params.n_nodes = params.world_size // params.n_gpu_per_node

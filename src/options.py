@@ -39,6 +39,7 @@ class Options():
         self.parser.add_argument('--train_data', type=str, default='none', help='path of train data')
         self.parser.add_argument('--eval_data', type=str, default='none', help='path of eval data')
         self.parser.add_argument('--model_size', type=str, default='base')
+        self.parser.add_argument('--model_name', type=str, default=None)
         self.parser.add_argument('--use_checkpoint', action='store_true', help='use checkpoint in the encoder')
         self.parser.add_argument('--text_maxlength', type=int, default=200, 
                         help='maximum number of tokens in text segments (question+passage)')
@@ -89,7 +90,12 @@ class Options():
                         help='save model every <save_freq> steps during training')
         self.parser.add_argument('--eval_print_freq', type=int, default=1000,
                         help='print intermdiate results of evaluation every <eval_print_freq> steps')
-
+        self.parser.add_argument('--pad_to_max_length', action='store_true', help='Should the passages all be padded to the max length provided (True value here), or to the max length of the longest passage? (False value here).')
+        self.parser.add_argument('--overwrite_checkpoint', action='store_true', help='Force overwrite of the checkpoint directory')
+        self.parser.add_argument('--gpus', type=int, default=1, help='number of accelerators')
+        self.parser.add_argument('--fp16', action='store_true', help='enable fp16 training')
+        self.parser.add_argument('--bf16', action='store_true', help='enable bf16 training')
+        self.parser.add_argument('--ampere', action='store_true', help='enable ampere tf32')
 
     def print_options(self, opt):
         message = '\n'
@@ -111,6 +117,7 @@ class Options():
 
     def parse(self):
         opt = self.parser.parse_args()
+        opt.local_rank = int(os.environ["LOCAL_RANK"]) # required for torchrun
         return opt
 
 
